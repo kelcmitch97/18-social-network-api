@@ -16,9 +16,15 @@ const UserSchema = new Schema(
         match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
     },
 
-    thoughts: [ThoughtSchema],
+    thoughts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Thought'
+    }],
 
-    friends: [UserSchema]
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 
     },
     {
