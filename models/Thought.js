@@ -7,7 +7,6 @@ const ThoughtSchema = new Schema( {
     thoughtText: {
         type: String,
         required: true,
-
     },
 
     createdAt: {
