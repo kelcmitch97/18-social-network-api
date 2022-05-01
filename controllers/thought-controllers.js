@@ -1,5 +1,4 @@
 const { User, Thought  } = require('../models');
-const { db } = require('../models/Thought');
 
 const thoughtController = {
 
@@ -148,13 +147,11 @@ const thoughtController = {
 
             createReaction({ params, body}, res) {
                 
-                Thought.findOneAndUpdate( { _id: params.thoughtId }, {$push: {reactions: body}}, { runValidators: true, new: true })
+                Thought.findOneAndUpdate( 
+                    { _id: params.thoughtId }, 
+                    {$push: {reactions: body}}, 
+                    { new: true })
 
-                .populate({
-                    path: 'reactions',
-                    select: "-__v"
-                })
-                .select('-__v')
                 .then(dbThoughtData => {
                     if (!dbThoughtData) {
                         res.status(404).json({message: 'No thought with this Id'});
@@ -169,18 +166,16 @@ const thoughtController = {
             // Delete reaction
             deleteReaction({ params }, res) {
                 
-                Thought.findOneAndUpdate( { _id: params.thoughtId }, {$pull: {reactions: {reactionId: params.reactionId}}}, { runValidators: true, new: true })
+                Thought.findOneAndUpdate( 
+                    { _id: params.thoughtId }, 
+                    {$pull: {reactions: {reactionId: params.reactionId}}}, 
+                    { new: true })
 
                 .then(dbThoughtData => {
-                    if (!dbThoughtData) {
-                        res.status(404).json({message: 'No thought with this Id'});
-                        return;
-                    }
                     res.json(dbThoughtData);
                 })
-                .catch(err => res.status(400).json(err))
-    
-            },
+                .catch(err => res.json(err))
+            }
 };
 
 module.exports = thoughtController;
